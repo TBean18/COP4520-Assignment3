@@ -31,12 +31,12 @@ public class Presents {
 
     public static void startAndWaitForThreads(Runnable r) {
         ArrayList<Thread> threads = new ArrayList<>();
-        startTime = System.currentTimeMillis();
         for (int i = 0; i < THREAD_COUNT; i++) {
             Thread t = new Thread(r, "" + i);
             t.start();
             threads.add(t);
         }
+        startTime = System.currentTimeMillis();
         for (Thread thread : threads) {
             try {
                 thread.join();

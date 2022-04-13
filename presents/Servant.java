@@ -10,13 +10,13 @@ public class Servant implements Runnable {
     public final int presentCount;
     final AtomicInteger thankYouCards = new AtomicInteger(0);
     final ConcurrentLinkedPresentList presentList = new ConcurrentLinkedPresentList();
-    final ConcurrentLinkedDeque<Integer> presentBag;
+    final ConcurrentLinkedQueue<Integer> presentBag;
     final ConcurrentLinkedQueue<Integer> addedPresents = new ConcurrentLinkedQueue<>();
 
     public Servant(int presentCount, List<Integer> presentBag) {
         this.presentCount = presentCount;
         // Turn Present bag into a concurrent Dequeue
-        this.presentBag = new ConcurrentLinkedDeque<>(presentBag);
+        this.presentBag = new ConcurrentLinkedQueue<>(presentBag);
     }
 
     @Override
