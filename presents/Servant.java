@@ -37,17 +37,18 @@ public class Servant implements Runnable {
     }
 
     void writeThankYouNote() {
-        int cur = addedPresents.poll();
-        if (!presentList.remove(cur)) {
-            System.out.println("ERROR");
-        }
-        thankYouCards.incrementAndGet();
+        // int cur = addedPresents.poll();
+        // if (!presentList.remove(cur)) {
+        // System.out.println("ERROR");
+        // }
+        if (presentList.poll() != null)
+            thankYouCards.incrementAndGet();
     }
 
     void addGift() {
         int cur = presentBag.poll();
         presentList.add(cur);
-        addedPresents.add(cur);
+        // addedPresents.add(cur);
 
     }
 

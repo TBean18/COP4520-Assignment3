@@ -114,4 +114,14 @@ public class ConcurrentLinkedPresentList {
     public boolean isEmpty() {
         return head.next.compareAndSet(tailNode, tailNode, false, false);
     }
+
+    public Integer poll() {
+        while (true) {
+            if (isEmpty())
+                return null;
+            int firstVal = head.next.getReference().id;
+            if (remove(firstVal))
+                return firstVal;
+        }
+    }
 }
