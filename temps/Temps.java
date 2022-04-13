@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import temps.TempSensor.TempReading;
 
 public class Temps {
-    private static final int THREAD_COUNT = 8;
-    public static final double TIME_SCALE = 0.1;
+    public static final int THREAD_COUNT = 8;
+    public static final double TIME_SCALE = 1.0;
 
     public static void main(String[] args) {
 

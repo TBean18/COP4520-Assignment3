@@ -34,6 +34,7 @@ public class TempSensor implements Runnable {
     ConcurrentSkipListSet<TempReading> readings = new ConcurrentSkipListSet<>();
     ConcurrentLinkedQueue<ConcurrentSkipListSet<TempReading>> hourlyReadingGroups;
     AtomicInteger numComplete = new AtomicInteger(0);
+    AtomicInteger globalTimeStamp = new AtomicInteger(0);
 
     public TempSensor(ConcurrentLinkedQueue<ConcurrentSkipListSet<TempReading>> output) {
         this.hourlyReadingGroups = output;
@@ -45,25 +46,34 @@ public class TempSensor implements Runnable {
         int sensorID = Integer.parseInt(Thread.currentThread().getName());
         while (true) {
 
+            // Thread woke up before the last thread was able to complete its reading
+            while (globalTimeStamp.get() != timestamp) {
+                System.out.printf("%d %d%n", globalTimeStamp.get(), timestamp);
+                Thread.onSpinWait();
+            }
+
             // collect temp at regular intervals and store them in shared memory
             int reading = ThreadLocalRandom.current().nextInt(-100, 71);
-            readings.add(new TempReading(reading, timestamp, sensorID));
+            readings.add(new TempReading(reading, globalTimeStamp.get(), sensorID));
             timestamp++;
-            if (timestamp >= 60) {
+            if (timestamp >= 60)
                 timestamp = 0;
-                int complete = numComplete.incrementAndGet();
-                if (complete == 8) {
+
+            // If the thread is the last to complete, then increment the global counter
+            if (numComplete.incrementAndGet() == Temps.THREAD_COUNT) {
+                int val = globalTimeStamp.incrementAndGet();
+                if (val >= 60) {
                     hourlyReadingGroups.add(readings);
                     readings = new ConcurrentSkipListSet<>();
                     numComplete.set(0);
-                } else
-                    while (numComplete.get() != 0) {
-                        Thread.onSpinWait();
-                    }
+                    globalTimeStamp.set(0);
+                }
+                numComplete.set(0);
             }
 
             try {
-                Thread.sleep((long) (1000 * Temps.TIME_SCALE));
+                // Sleep for 1 minute until next temp reading is required
+                Thread.sleep((long) (60000 * Temps.TIME_SCALE));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
