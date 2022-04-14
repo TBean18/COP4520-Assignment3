@@ -5,7 +5,6 @@
   - [Efficiency](#efficiency)
   - [Correctness](#correctness)
     - [Linerizable](#linerizable)
-  - [Experimental Evaluation](#experimental-evaluation)
 - [Atmospheric Temperature Reading Module](#atmospheric-temperature-reading-module)
   - [Folder Structure and Run Instructions](#folder-structure-and-run-instructions-1)
   - [Design](#design-1)
@@ -57,14 +56,6 @@ Therefore, we can ensure that the number of presents received is equal to the nu
   - Contains
     - A successful call is linearized when an unmarked matching node is found
     - Unsuccessful contains() within its execution interval at the earlier of the following points: (1) the point where a removed matching node, or a node with a key greater than the one being searched for is found, and (2) the point immediately before a new matching node is added to the list.
-
-## Experimental Evaluation
-
-| Thread # | Avg. Runtime |
-| :------: | ------------ |
-|    1     |              |
-|    2     |              |
-|    4     |              |
 
 # Atmospheric Temperature Reading Module
 
